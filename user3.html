@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fall Risk Environmental Audit Tool</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef2f7;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #0078d7, #005a9e);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .category {
+      font-weight: bold;
+      margin-top: 25px;
+      padding: 12px;
+      background: #f0f6ff;
+      border-left: 5px solid #0078d7;
+      border-radius: 4px;
+      font-size: 18px;
+    }
+    label {
+      display: block;
+      margin: 8px 0;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    label:hover {
+      background: #f9f9f9;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px 30px;
+      background: #0078d7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: #005a9e;
+      transform: scale(1.05);
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 20px;
+      border-radius: 8px;
+      background: #f7f9fc;
+      border: 1px solid #ddd;
+      line-height: 1.6;
+    }
+    .low { color: green; }
+    .moderate { color: orange; }
+    .high { color: red; }
+    .progress-bar {
+      margin-top: 15px;
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #4caf50, #f44336);
+      transition: width 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Environmental Audit Tool</h1>
+  </header>
+  <div class="container">
+    <div class="category">Flooring & Mobility</div>
+    <label><input type="checkbox"> Loose rugs present</label>
+    <label><input type="checkbox"> Slippery floors</label>
+    <label><input type="checkbox"> Uneven flooring</label>
+    <label><input type="checkbox"> Clutter on walkways</label>
+    <label><input type="checkbox"> Electrical cords across walkways</label>
+    <label><input type="checkbox"> Stairs without non-slip surfaces</label>
+
+    <div class="category">Lighting</div>
+    <label><input type="checkbox"> Inadequate hallway lighting</label>
+    <label><input type="checkbox"> Poor entrance lighting</label>
+    <label><input type="checkbox"> No night lights in bedroom</label>
+    <label><input type="checkbox"> No night lights in bathroom</label>
+    <label><input type="checkbox"> Light switches hard to reach</label>
+    <label><input type="checkbox"> Burnt-out bulbs</label>
+
+    <div class="category">Bathroom Safety</div>
+    <label><input type="checkbox"> No grab bars near toilet</label>
+    <label><input type="checkbox"> No grab bars in shower</label>
+    <label><input type="checkbox"> Slippery bathroom floor</label>
+    <label><input type="checkbox"> No non-slip mat</label>
+    <label><input type="checkbox"> Toilet seat too low</label>
+    <label><input type="checkbox"> Shower/tub difficult to enter</label>
+
+    <div class="category">Furniture & Layout</div>
+    <label><input type="checkbox"> Furniture obstructs pathways</label>
+    <label><input type="checkbox"> Chairs unstable</label>
+    <label><input type="checkbox"> Low furniture hard to rise from</label>
+    <label><input type="checkbox"> Sharp-edged furniture</label>
+    <label><input type="checkbox"> Items stored too high</label>
+    <label><input type="checkbox"> Cluttered living areas</label>
+
+    <div class="category">Accessibility</div>
+    <label><input type="checkbox"> No handrails on stairs</label>
+    <label><input type="checkbox"> Narrow doorways</label>
+    <label><input type="checkbox"> Steps without ramps</label>
+    <label><input type="checkbox"> No accessible bathroom</label>
+    <label><input type="checkbox"> No accessible kitchen workspace</label>
+    <label><input type="checkbox"> No emergency contact system</label>
+
+    <button onclick="calculateRisk()">Calculate Risk</button>
+    <div id="result"></div>
+    <div class="progress-bar"><div class="progress" id="progress"></div></div>
+  </div>
+
+  <script>
+    function calculateRisk() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      let score = 0;
+      checkboxes.forEach(cb => { if(cb.checked) score++; });
+
+      let riskLevel = '';
+      let cssClass = '';
+      if(score <= 5) { riskLevel = 'Low Risk'; cssClass = 'low'; }
+      else if(score <= 15) { riskLevel = 'Moderate Risk'; cssClass = 'moderate'; }
+      else { riskLevel = 'High Risk'; cssClass = 'high'; }
+
+      let recommendation = '';
+      if(riskLevel === 'Low Risk') recommendation = 'Maintain safe environment and monitor regularly.';
+      if(riskLevel === 'Moderate Risk') recommendation = 'Address identified hazards promptly (e.g., add lighting, remove clutter).';
+      if(riskLevel === 'High Risk') recommendation = 'Urgent intervention needed: install grab bars, improve accessibility, consult occupational therapist.';
+
+      document.getElementById('result').innerHTML =
+        `Total Score: ${score}/30<br><span class="${cssClass}">Risk Level: ${riskLevel}</span><br>Recommendation: ${recommendation}`;
+
+      // Progress bar update
+      const progress = document.getElementById('progress');
+      progress.style.width = (score/30*100) + '%';
+    }
+  </script>
+</body>
+</html>
